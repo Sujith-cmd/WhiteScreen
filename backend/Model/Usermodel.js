@@ -7,14 +7,16 @@ const userSchema= mongoose.Schema({
     },
     email: {
         type:String,
-        required: true
+        required: true,
+        unique:true
     },
     password: {
         type: String,
-        // required: true
+        required: true
     },
     booking: [
-        {type:String
+        {type:String,
+            unique:true
         }
         
     ],
@@ -34,14 +36,11 @@ const userSchema= mongoose.Schema({
         type : String
     },
     address: {
-        houseNo:{ type: String },
-        addresslineOne:{type:String},
-        addresslineTwo:{type:String},
-        postOffice:{type: String},
+        locality:{type: String},
         district:{type:String},
         state:{type:String}
     
     }
-})
+},{timestamps:true})
 
 export default mongoose.model("Viewer",userSchema)

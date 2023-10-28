@@ -2,24 +2,29 @@ import Bookings from "../Model/Bookings.js";
 import User from "../Model/Usermodel.js"
 import Vendor from "../Model/Vendormodel.js"
 import bcrypt from "bcryptjs"
-export const signup = async (req,res)=>{
+import { errorHandler } from "../utils/error.js";
+export const signup = async (req,res,next)=>{
     console.log(req.body);
-const {username,email,password,houseNo,addresslineOne,addresslineTwo,postOffice,district,state} =req.body
+const {username,email,password,locality,district,state} =req.body
 const salt= bcrypt.genSaltSync(10);
     const hash=bcrypt.hashSync(password, salt)
 const newUser= new User({
     username,email,password:hash,
     address:{
-        houseNo,addresslineOne,addresslineTwo,postOffice,district,state
+        locality,district,state
     },
     })
-    const savedUser=await newUser.save()
-    console.log(savedUser);
-    if(!savedUser||savedUser==undefined){
-       console.log("Error in db");
-    }else{
+    try {
+        const savedUser=await newUser.save()
+        
+        
         res.status(200).json(savedUser)
+    } catch (error) {
+
+       next(errorHandler(500,"Something gone wrong"));
+        
     }
+    
 }
 
 

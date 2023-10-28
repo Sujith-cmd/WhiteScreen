@@ -19,11 +19,15 @@ app.use(cookieParser())
 app.use(express.json())
 app.use("/api/users",userRoutes)
 app.use("/api/vendors",vendorRoutes)
-app.get("/",(req,res,next)=>{
-    let a=process.env.SECRET
-console.log("hellllooo");
-console.log(`${a}`);
-    res.send(`${a}`)
+app.use((err,req,res,next)=>{
+    const statuscode= err.statuscode || 500;
+    const message = err.message || "Internal Server Error";
+    return res.status(statuscode).json({
+        success:false,
+        message,
+        statuscode
+    })
+
 })
 
 app.listen(5000,()=>{

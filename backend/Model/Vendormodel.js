@@ -7,7 +7,8 @@ const vendorSchema= mongoose.Schema({
     },
     email: {
         type:String,
-        required: true
+        required: true,
+        unique:true
     },
     password: {
         type: String,
@@ -60,7 +61,7 @@ const vendorSchema= mongoose.Schema({
         type : String,
         dafault:""
     },
-    viewers:[{type:String,dafault:null}],
+    viewers:[{type:String,dafault:null,unique:true}],
     eatables : [{
         item:{type:String,dafault:null},
         quantity:{type:Number,dafault:null},
@@ -70,4 +71,4 @@ const vendorSchema= mongoose.Schema({
 
 })
 
-export default mongoose.model("vendordb",vendorSchema)
+export default mongoose.model("Vendordb",vendorSchema)

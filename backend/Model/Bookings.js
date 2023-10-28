@@ -29,6 +29,6 @@ const bookingSchema= mongoose.Schema({
         type:Number
     }
     
-})
+},{timestamps:true})
 
 export default mongoose.model("Booking",bookingSchema)
