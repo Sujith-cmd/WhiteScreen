@@ -1,5 +1,13 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+body{
+  /* background-image: url("/whiteScreen/src/assets/images/3153874.jpg"); */
+background-color: rgb(8 47 73);
+}
+.box1{
+  height: 40vh;
+  margin-top: 10%;
+  /* margin-bottom: %; */
+}

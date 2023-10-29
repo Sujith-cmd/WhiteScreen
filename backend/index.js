@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
 import userRoutes from "./Routes/userRoutes.js"
 import vendorRoutes from "./Routes/vendorRoutes.js"
+import cors from 'cors'
 dotenv.config()
 const app=express()
 mongoose.connect
@@ -16,6 +17,7 @@ const connect= async (req,res)=>{
     }
     }
 app.use(cookieParser())
+app.use(cors())
 app.use(express.json())
 app.use("/api/users",userRoutes)
 app.use("/api/vendors",vendorRoutes)

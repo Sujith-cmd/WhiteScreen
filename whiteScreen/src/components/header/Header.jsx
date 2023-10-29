@@ -4,10 +4,10 @@ import "./Header.css"
 import { Link } from 'react-router-dom'
 const Header = () => {
   return (
-    <div className='bg-sky-950 py-0' >
+    <div className='bg-sky-950 py-0 max-h-20' >
         <div className='flex flex-row justify-between py-0 navItems'>
            <Link to="/">
-            <img className='logo' src={logo} alt="logo" />
+            <img className=' max-h-16' src={logo} alt="logo" />
            </Link>
 
 <ul className='text-white flex gap-11 mx-20 '>

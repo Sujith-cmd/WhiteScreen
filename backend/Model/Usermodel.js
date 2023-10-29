@@ -15,10 +15,7 @@ const userSchema= mongoose.Schema({
         required: true
     },
     booking: [
-        {type:String,
-            unique:true
-        }
-        
+        {type:String,dafault:null}  
     ],
     account_Bal: {
         type: Number,

@@ -3,45 +3,57 @@ import User from "../Model/Usermodel.js"
 import Vendor from "../Model/Vendormodel.js"
 import bcrypt from "bcryptjs"
 import { errorHandler } from "../utils/error.js";
+import jwt from 'jsonwebtoken'
 export const signup = async (req,res,next)=>{
-    console.log(req.body);
-const {username,email,password,locality,district,state} =req.body
-const salt= bcrypt.genSaltSync(10);
-    const hash=bcrypt.hashSync(password, salt)
-const newUser= new User({
-    username,email,password:hash,
-    address:{
-        locality,district,state
-    },
-    })
+    const {username,email,password} =req.body
     try {
-        const savedUser=await newUser.save()
-        
+    const hash= bcrypt.hashSync(password,10)
+    const newUser= new User({
+        username,email,password:hash
+})
+console.log("NEW USER");
+console.log(newUser);
+
+    const savedUser=await newUser.save()
+    
+    console.log("saved USER");
+    console.log(savedUser);
         
         res.status(200).json(savedUser)
     } catch (error) {
-
+       console.log("error");
+       console.log(error);
        next(errorHandler(500,"Something gone wrong"));
         
     }
     
 }
 
-
-export const login = async (req,res)=>{
+ 
+export const login = async (req,res,next)=>{
     console.log(req.body);
 const {email,password} =req.body
   try {
     const viewer= await User.findOne({email})
+    // console.log(viewer);
    if(viewer){
     const isPasswordCorrect= await bcrypt.compare(password,viewer.password);
+   
     if(isPasswordCorrect){
-        res.status(200).json({viewer,message:"login successful"})
-       }   
+        const token=jwt.sign({id:viewer._id},process.env.JWT_SECRET)
+        const {password,...rest}=viewer._doc
+        const expiryDate = new Date(Date.now()+3600000)
+        res.cookie('access_token',token,{httpOnly:true, expires:expiryDate}).status(200).json({rest,message:"login successful"})
+       }else{
+        next(errorHandler(401,"Invalid Credentials"))
+    } 
+}else{
+    next(errorHandler(401,"Invalid Credentials"))
 }
    
   } catch (error) {
-    res.status(401).json({message:"login denied"})
+    // res.status(401).json({message:"login denied"})
+    next(error)
 
    
   }
