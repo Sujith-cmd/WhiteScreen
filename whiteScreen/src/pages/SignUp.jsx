@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import logo from '../assets/images/logo.PNG'
 import axios from 'axios'
+import OAuth from '../components/OAuth'
 
 
 const SignUp = () => {
@@ -45,7 +46,7 @@ const SignUp = () => {
   
   return (
     <div className='max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7 text-amber-500'>SignUp</h1>
+      <h1 className='text-3xl text-center font-semibold my-7 text-amber-500'>SIGN UP</h1>
       <div className='flex  gap-9 mt-4 box1 ' >
         <span>
 
@@ -58,6 +59,7 @@ const SignUp = () => {
         <input type="email" placeholder='Enter email' id='email' className='bg-slate-100 p-3 rounded-lg' onChange={handleChange}/>
         <input type="password" placeholder='Enter password' id='password' className='bg-slate-100 p-3 rounded-lg' onChange={handleChange}/>
       <button  disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading? 'Loading':'SignUp'}</button>
+      <OAuth/>
       </form>
         </span>
       </div>

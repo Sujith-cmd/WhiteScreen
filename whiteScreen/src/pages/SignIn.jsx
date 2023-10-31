@@ -4,6 +4,7 @@ import logo from '../assets/images/logo.PNG'
 import axios from 'axios'
 import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import OAuth from '../components/OAuth'
 useDispatch
 const SignIn = () => {
   const [formData, setFormData] = useState({})
@@ -50,9 +51,9 @@ const dispatch=useDispatch()
     
   
   return (
-    <div className='max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7 text-amber-500'>SignIn</h1>
-      <div className='flex  gap-9 mt-4 box1 ' >
+    <div className='max-w-xl mx-auto'>
+      <h1 className='text-3xl text-center font-semibold my-7 text-amber-500 uppercase'>Sign In</h1>
+      <div className='flex  gap-9 box1 ' >
         <span>
 
       <img src={logo} alt="" className=''/>
@@ -60,9 +61,10 @@ const dispatch=useDispatch()
         <span>
 
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 mx-1'>
-        <input type="email" placeholder='Enter email' id='email' className='bg-slate-100 p-3 rounded-lg' onChange={handleChange}/>
+        <input type="email" placeholder='Enter email' id='email' className='bg-slate-100 p-3 w-80 rounded-lg' onChange={handleChange}/>
         <input type="password" placeholder='Enter password' id='password' className='bg-slate-100 p-3 rounded-lg' onChange={handleChange}/>
       <button  disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading? 'Loading':'SignIn'}</button>
+       <OAuth/>
       </form>
         </span>
       </div>

@@ -4,13 +4,17 @@ import Vendor from "../Model/Vendormodel.js"
 import bcrypt from "bcryptjs"
 import { errorHandler } from "../utils/error.js";
 import jwt from 'jsonwebtoken'
+
 export const signup = async (req,res,next)=>{
     const {username,email,password} =req.body
     try {
     const hash= bcrypt.hashSync(password,10)
-    const newUser= new User({
-        username,email,password:hash
-})
+   
+
+        const newUser= new User({
+            username,email,password:hash
+    })
+
 console.log("NEW USER");
 console.log(newUser);
 
@@ -37,6 +41,14 @@ const {email,password} =req.body
     const viewer= await User.findOne({email})
     // console.log(viewer);
    if(viewer){
+
+    // if(req.body.displayPicture){
+    //   return  res.status(200).json({viewer,message:"login successful"})
+    // }
+
+
+
+
     const isPasswordCorrect= await bcrypt.compare(password,viewer.password);
    
     if(isPasswordCorrect){
@@ -98,19 +110,79 @@ export const search = async (req,res)=>{
 }
 
 export const booking = async (req,res)=>{
-  const viewerId=req.params.uid
-  const theatreId=req.params.tid
-  const{username,theatreName,timeSlots:timings,pricePerHour,seats,eatables,total}=req.body
-try {
+//   const viewerId=req.params.uid
+//   const theatreId=req.params.tid
+//   const{username,theatreName,timeSlots:timings,pricePerHour,seats,eatables,total}=req.body
+// try {
     
-    const newBooking=new Bookings({
-        viewerName:username,theatreName,timings,pricePerHour,seats,eatables,totalPrice:total 
-  })
-  const savedBooking=await newBooking.save()
-  res.status(200).json(savedBooking)
-} catch (error) {
-    console.log(error);
-    res.status(500).json({msg:"booking gone wrong"})
+//     const newBooking=new Bookings({
+//         viewerName:username,theatreName,timings,pricePerHour,seats,eatables,totalPrice:total 
+//   })
+//   const savedBooking=await newBooking.save()
+//   res.status(200).json(savedBooking)
+// } catch (error) {
+//     console.log(error);
+//     res.status(500).json({msg:"booking gone wrong"})
+// }
+const result= await User.updateMany({},{$set:{displayPicture:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThLP6xJXBY_W2tT5waakogfnpHk4uhpVTy7A&usqp=CAU"}})
+res.status(200).json(result)
 }
 
+
+export const google = async (req,res)=>{
+try {
+    const viewer= await User.findOne({email:req.body.email})
+    if(viewer){
+        const token = jwt.sign({id:viewer._id},process.env.JWT_SECRET)
+        const {password,...rest}=viewer._doc
+        const expiryDate = new Date(Date.now()+3600000)
+       return res.cookie('access_token',token,{httpOnly:true, expires:expiryDate}).status(200).json({rest,message:"login successful"})
+       
+    }else{
+         const generatedPassword=Math.random().toString(36).slice(-8)
+         const newUser= new User({
+            username:req.body.username.split(" ").join("").toLowerCase(),
+            email:req.body.email,password:generatedPassword,displayPicture:req.body.photoURL
+    })
+        await newUser.save()
+        const token = jwt.sign({id:newUser._id},process.env.JWT_SECRET)
+        // const {password,...rest}=newUser
+        const expiryDate = new Date(Date.now()+3600000)
+      return  res.cookie('access_token',token,{httpOnly:true, expires:expiryDate}).status(200).json({newUser,message:"signup and login successful"})
+       
+        }
+} catch (error) {
+    console.log(error);
+  return res.status(500).json({message:"login failed"})
+
 }
+}
+
+
+export const updateUser = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+      return next(errorHandler(401, 'You can update only your account!'));
+    }
+    try {
+      if (req.body.password) {
+        req.body.password = bcrypt.hashSync(req.body.password, 10);
+      }
+  
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+            profilePicture: req.body.profilePicture,
+          },
+        },
+        { new: true }
+      );
+      const { password, ...rest } = updatedUser._doc;
+      res.status(200).json(rest);
+    } catch (error) {
+      next(error);
+    }
+  };

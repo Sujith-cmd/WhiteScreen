@@ -1,0 +1,31 @@
+/* HeroSection.css */
+
+.hero-container {
+    position: relative;
+    text-align: center;
+    color: #ffffff; /* Set the color of the text */
+  }
+  
+  .hero-image {
+    width: 100%; /* Adjust the width as needed */
+    height: 500px; /* Adjust the height as needed */
+    object-fit: cover; /* Ensure the image covers the entire container */
+  }
+  
+  .hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Customize the styles for h1 and p as per your requirements */
+  .hero-content h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+  }
+  
+  .hero-content p {
+    font-size: 1.5em;
+  }
+  
